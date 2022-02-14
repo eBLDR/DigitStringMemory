@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Digit String Memory</string>
+    <string name="run_level">Run level</string>
 </resources>

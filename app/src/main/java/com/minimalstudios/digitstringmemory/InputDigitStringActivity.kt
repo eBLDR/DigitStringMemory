@@ -8,7 +8,6 @@ class InputDigitStringActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val binding = ActivityInputDigitStringBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
