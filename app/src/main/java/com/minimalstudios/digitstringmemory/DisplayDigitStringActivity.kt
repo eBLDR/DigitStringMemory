@@ -23,12 +23,12 @@ class DisplayDigitStringActivity : AppCompatActivity() {
             object : CountDownTimer((digitString.length * 1000).toLong(), 1000) {
                 var index = 0
                 override fun onTick(millisUntilFinished: Long) {
-                    binding.tvDisplayDigit.setText("${digitString[index]}")
+                    binding.tvDisplayDigit.text = "${digitString[index]}"
                     index++
                 }
 
                 override fun onFinish() {
-                    binding.tvDisplayDigit.setText("done!")
+                    binding.tvDisplayDigit.text = "done!"
                     // TODO
                 }
             }.start()

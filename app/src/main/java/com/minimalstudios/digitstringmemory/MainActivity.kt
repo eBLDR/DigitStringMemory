@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.tvLevel.text = "Level: $level"
+
         binding.btnRunLevel.setOnClickListener {
             generateDigitString() // TODO: TMP
             displayDigitString()
