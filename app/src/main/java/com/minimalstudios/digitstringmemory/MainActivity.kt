@@ -19,11 +19,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tvLevel.text = "Level: $level"
+        binding.tvLevel.text = getString(R.string.level, level)
 
         binding.btnRunLevel.setOnClickListener {
             generateDigitString() // TODO: TMP
-            displayDigitString()
+//            displayDigitString()
+            inputDigitString()
         }
     }
 
@@ -31,6 +32,12 @@ class MainActivity : AppCompatActivity() {
         val context = binding.btnRunLevel.context
         val intent = Intent(context, DisplayDigitStringActivity::class.java)
         intent.putExtra(DisplayDigitStringActivity.DIGIT_STRING, digitString)
+        context.startActivity(intent)
+    }
+
+    private fun inputDigitString() {
+        val context = binding.btnRunLevel.context
+        val intent = Intent(context, InputDigitStringActivity::class.java)
         context.startActivity(intent)
     }
 
