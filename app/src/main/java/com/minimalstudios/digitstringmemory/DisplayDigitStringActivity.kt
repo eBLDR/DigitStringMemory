@@ -11,8 +11,9 @@ class DisplayDigitStringActivity : AppCompatActivity() {
         const val DIGIT_STRING = "digit_string"
     }
 
-    private val intervalBetweenDigits: Long = 1000
     private val intervalTick: Long = 100
+    private var preparationTicksLeft = 10
+    private val intervalBetweenDigits: Long = 1000
     private val ticksBetweenDigits = (intervalBetweenDigits / intervalTick).toInt()
     private val blinkingTicks = 2
     private val tickStartBlink = ticksBetweenDigits - blinkingTicks
@@ -22,14 +23,23 @@ class DisplayDigitStringActivity : AppCompatActivity() {
         val binding = ActivityDisplayDigitStringBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val digitString = intent?.extras?.get(DIGIT_STRING)
+        val digitString = intent?.extras?.getString(DIGIT_STRING, null)
 
-        if (digitString is String) {
-            object : CountDownTimer((digitString.length * intervalBetweenDigits), intervalTick) {
+        if (digitString != null) {
+            object : CountDownTimer(
+                (digitString.length * intervalBetweenDigits + preparationTicksLeft * intervalTick),
+                intervalTick
+            ) {
                 var tickCounter = 0
                 var index = 0
 
                 override fun onTick(millisUntilFinished: Long) {
+                    // Preparation time before flashing first digit
+                    if (preparationTicksLeft > 0) {
+                        preparationTicksLeft--
+                        return
+                    }
+
                     tickCounter++
 
                     when (tickCounter) {
@@ -43,8 +53,8 @@ class DisplayDigitStringActivity : AppCompatActivity() {
                 }
 
                 override fun onFinish() {
-                    binding.tvDisplayDigit.text = "done!"
-                    // TODO
+                    setResult(RESULT_OK)
+                    finish()
                 }
             }.start()
         }

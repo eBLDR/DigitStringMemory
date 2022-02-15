@@ -2,4 +2,6 @@
     <string name="app_name">Digit String Memory</string>
     <string name="run_level">Run level</string>
     <string name="level">Level %1$d</string>
+    <string name="passed">Passed!</string>
+    <string name="failed">Failed.</string>
 </resources>

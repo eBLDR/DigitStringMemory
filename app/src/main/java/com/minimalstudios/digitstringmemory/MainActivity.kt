@@ -2,29 +2,57 @@ package com.minimalstudios.digitstringmemory
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.minimalstudios.digitstringmemory.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var resultDisplayDigitString: ActivityResultLauncher<Intent>
+    private lateinit var resultInputDigitString: ActivityResultLauncher<Intent>
 
     private val levelInit: Int = 5
     private var level: Int = levelInit
     private var digitString: String = ""
+    private var inputDigitString: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tvLevel.text = getString(R.string.level, level)
+        // Register contracts
+        resultDisplayDigitString = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == RESULT_OK) {
+                runInputDigitString()
+            }
+        }
+
+        resultInputDigitString = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == RESULT_OK) {
+                inputDigitString =
+                    it.data?.getStringExtra(InputDigitStringActivity.INPUT_DIGIT_STRING)
+                assessResult()
+            }
+        }
+
+        // Prepare main menu
+        renderLevel()
 
         binding.btnRunLevel.setOnClickListener {
-            generateDigitString() // TODO: TMP
-            displayDigitString()
-//            inputDigitString()
+            runLevel()
         }
+    }
+
+    private fun runLevel() {
+        generateDigitString()
+        runDisplayDigitString()
     }
 
     private fun generateDigitString() {
@@ -34,29 +62,44 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayDigitString() {
-        val context = binding.btnRunLevel.context
-        val intent = Intent(context, DisplayDigitStringActivity::class.java)
+    private fun runDisplayDigitString() {
+        val intent = Intent(this, DisplayDigitStringActivity::class.java)
         intent.putExtra(DisplayDigitStringActivity.DIGIT_STRING, digitString)
-        context.startActivity(intent)
+        resultDisplayDigitString.launch(intent)
     }
 
-    private fun inputDigitString() {
-        val context = binding.btnRunLevel.context  // TODO TMP
-        val intent = Intent(context, InputDigitStringActivity::class.java)
-        context.startActivity(intent)
+    private fun runInputDigitString() {
+        val intent = Intent(this, InputDigitStringActivity::class.java)
+        resultInputDigitString.launch(intent)
     }
 
-    // TMP: ALL BELOW HERE
+    private fun assessResult() {
+        when (inputDigitString) {
+            digitString -> levelPassed()
+            else -> levelFailed()
+        }
+        binding.tvHistoric.text = digitString
+    }
+
     private fun getRandomDigit(): String {
         return (0..9).random().toString()
     }
 
-    fun increaseLevel() {
-        level += 1
+    private fun renderLevel() {
+        binding.tvLevel.text = getString(R.string.level, level)
     }
 
-    fun decreaseLevel() {
-        level -= 1
+    private fun levelPassed() {
+        binding.tvResult.text = getString(R.string.passed)
+        level++
+        renderLevel()
+    }
+
+    private fun levelFailed() {
+        binding.tvResult.text = getString(R.string.failed)
+        if (level > 1) {
+            level--
+        }
+        renderLevel()
     }
 }

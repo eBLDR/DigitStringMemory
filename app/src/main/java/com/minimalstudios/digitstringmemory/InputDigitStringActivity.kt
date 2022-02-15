@@ -1,11 +1,15 @@
 package com.minimalstudios.digitstringmemory
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.minimalstudios.digitstringmemory.databinding.ActivityInputDigitStringBinding
 
 class InputDigitStringActivity : AppCompatActivity() {
 
+    companion object {
+        const val INPUT_DIGIT_STRING = "input_digit_string"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +38,10 @@ class InputDigitStringActivity : AppCompatActivity() {
         }
 
         binding.btnOK.setOnClickListener {
-            // TODO
+            val resultIntent = Intent()
+            resultIntent.putExtra(INPUT_DIGIT_STRING, binding.tvInputDigitString.text.toString())
+            setResult(RESULT_OK, resultIntent)
+            finish()
         }
     }
 }
