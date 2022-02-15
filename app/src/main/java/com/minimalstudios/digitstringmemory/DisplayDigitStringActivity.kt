@@ -11,6 +11,12 @@ class DisplayDigitStringActivity : AppCompatActivity() {
         const val DIGIT_STRING = "digit_string"
     }
 
+    private val intervalBetweenDigits: Long = 1000
+    private val intervalTick: Long = 100
+    private val ticksBetweenDigits = (intervalBetweenDigits / intervalTick).toInt()
+    private val blinkingTicks = 2
+    private val tickStartBlink = ticksBetweenDigits - blinkingTicks
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityDisplayDigitStringBinding.inflate(layoutInflater)
@@ -18,13 +24,22 @@ class DisplayDigitStringActivity : AppCompatActivity() {
 
         val digitString = intent?.extras?.get(DIGIT_STRING)
 
-        // TODO: blink between digit to avoid confusion when repeated consecutive
         if (digitString is String) {
-            object : CountDownTimer((digitString.length * 1000).toLong(), 1000) {
+            object : CountDownTimer((digitString.length * intervalBetweenDigits), intervalTick) {
+                var tickCounter = 0
                 var index = 0
+
                 override fun onTick(millisUntilFinished: Long) {
-                    binding.tvDisplayDigit.text = "${digitString[index]}"
-                    index++
+                    tickCounter++
+
+                    when (tickCounter) {
+                        1 -> {
+                            binding.tvDisplayDigit.text = "${digitString[index]}"
+                            index++
+                        }
+                        tickStartBlink -> binding.tvDisplayDigit.text = ""
+                        ticksBetweenDigits -> tickCounter = 0
+                    }
                 }
 
                 override fun onFinish() {

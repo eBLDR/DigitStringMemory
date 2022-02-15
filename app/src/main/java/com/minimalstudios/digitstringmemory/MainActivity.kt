@@ -9,7 +9,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    // TMP HERE
     private val levelInit: Int = 5
     private var level: Int = levelInit
     private var digitString: String = ""
@@ -23,8 +22,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnRunLevel.setOnClickListener {
             generateDigitString() // TODO: TMP
-//            displayDigitString()
-            inputDigitString()
+            displayDigitString()
+//            inputDigitString()
+        }
+    }
+
+    private fun generateDigitString() {
+        digitString = ""
+        repeat(level) {
+            digitString += getRandomDigit()
         }
     }
 
@@ -36,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun inputDigitString() {
-        val context = binding.btnRunLevel.context
+        val context = binding.btnRunLevel.context  // TODO TMP
         val intent = Intent(context, InputDigitStringActivity::class.java)
         context.startActivity(intent)
     }
@@ -44,13 +50,6 @@ class MainActivity : AppCompatActivity() {
     // TMP: ALL BELOW HERE
     private fun getRandomDigit(): String {
         return (0..9).random().toString()
-    }
-
-    private fun generateDigitString() {
-        digitString = ""
-        repeat(level) {
-            digitString += getRandomDigit()
-        }
     }
 
     fun increaseLevel() {
