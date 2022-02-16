@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         ) {
             if (it.resultCode == RESULT_OK) {
                 runInputDigitString()
+            } else {
+                assessResult()
             }
         }
 
@@ -38,8 +40,8 @@ class MainActivity : AppCompatActivity() {
             if (it.resultCode == RESULT_OK) {
                 inputDigitString =
                     it.data?.getStringExtra(InputDigitStringActivity.INPUT_DIGIT_STRING)
-                assessResult()
             }
+            assessResult()
         }
 
         // Prepare main menu
@@ -51,6 +53,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun runLevel() {
+        inputDigitString = ""
         generateDigitString()
         runDisplayDigitString()
     }
